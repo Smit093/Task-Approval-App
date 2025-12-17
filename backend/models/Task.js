@@ -41,14 +41,21 @@ const taskSchema = new mongoose.Schema(
 );
 
 // Guard: prevent editing after locked
-taskSchema.pre("save", function (next) {
-  if (this.isModified("status")) {
-    if (this.status === "approved" || this.status === "rejected") {
-      this.isLocked = true;
+taskSchema.pre("save", function () {
+  console.log("Pre-save hook called");
+  console.log("isModified(status):", this.isModified("status"));
+  console.log("status:", this.status);
+  try {
+    if (this.isModified("status")) {
+      if (this.status === "approved" || this.status === "rejected") {
+        this.isLocked = true;
+      }
     }
+  } catch (err) {
+    console.error("Error in pre-save hook:", err);
   }
-  next();
 });
+
 
 // Indexes for faster queries
 taskSchema.index({ createdBy: 1, status: 1 });
