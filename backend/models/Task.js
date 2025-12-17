@@ -43,8 +43,6 @@ const taskSchema = new mongoose.Schema(
 // Guard: prevent editing after locked
 taskSchema.pre("save", function () {
   console.log("Pre-save hook called");
-  console.log("isModified(status):", this.isModified("status"));
-  console.log("status:", this.status);
   try {
     if (this.isModified("status")) {
       if (this.status === "approved" || this.status === "rejected") {
